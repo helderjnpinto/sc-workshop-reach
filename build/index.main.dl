@@ -1,0 +1,562 @@
+#lang dl
+parts {
+  "Alice" = interact {
+    deadline = IT_Val UInt,
+    getHand = IT_Fun [] UInt,
+    informTimeout = IT_Fun [] Null,
+    random = IT_Fun [] UInt,
+    seeOutcome = IT_Fun [UInt] Null,
+    wager = IT_Val UInt},
+  "Bob" = interact {
+    acceptWager = IT_Fun [UInt] Null,
+    getHand = IT_Fun [] UInt,
+    informTimeout = IT_Fun [] Null,
+    random = IT_Fun [] UInt,
+    seeOutcome = IT_Fun [UInt] Null}};
+
+// maps
+{
+  }
+// initialization
+
+{
+  }
+{
+  }
+{
+  }
+{
+  }
+const v5 = {
+  i = 0,
+  sign = true};
+const v7 = {
+  i = 0,
+  sign = true};
+const v23 = impossible(Cannot inspect value from `forall`);
+const v26 = impossible(Cannot inspect value from `forall`);
+const v29 = 4 - handBob/26;
+const v30 = handAlice/23 + v29;
+const v31 = v30 % 3;
+const v33 = 0 <= x/31;
+const v34 = x/31 < 3;
+const v35 = (v33 ? v34 : false);
+claim(CT_Assert)(v35, Nothing);
+const v37 = impossible(Cannot inspect value from `forall`);
+const v40 = 4 - handBob/37;
+const v41 = handAlice/37 + v40;
+const v42 = v41 % 3;
+const v43 = v42 == 1;
+claim(CT_Assert)(v43, Nothing);
+only("Alice") {
+  {
+    const v44 = "Alice".interact.deadline;
+    const v45 = "Alice".interact.wager; } };
+only("Bob") {
+  {
+     } };
+fluid balance(0) := 0
+only("Alice") {
+  {
+    const v47 = selfAddress("Alice", False, 46 )();
+    prompt(v48 {pure local}) {
+      throw(null).to(48); }; } };
+only("Alice") {
+  {
+     } };
+publish(@?)
+  .case("Alice").send({
+    isClass = False,
+    msg = [wager/45, deadline/44],
+    pay = [wager/45, ],
+    when = true})
+  .recv({
+    didSend = v56,
+    from = v49,
+    msg = [v50, v51],
+    secs = v55,
+    time = v54}){
+    v52 <- fluid balance(0)
+    const v53 = balance(0)/52 + wager/50;
+    fluid balance(0) := v53
+    checkPay(wager/50, Nothing);
+    fluid thisConsensusTime := thisConsensusTime/54
+    fluid thisConsensusSecs := thisConsensusSecs/55
+    fluid didPublish := didPublish/56
+    commit();
+    only("Bob") {
+      {
+        const v58 = selfAddress("Bob", False, 57 )();
+        prompt(v59 {impure local}) {
+          protect<Null>("Bob".interact.acceptWager(wager/50 ));
+          throw(null).to(59); }; } };
+    only("Bob") {
+      {
+         } };
+    v245 <- fluid baseWaitTime
+    v248 <- fluid baseWaitTime
+    const v249 = UInt.max - base/248;
+    const v250 = v249 - value/51;
+    const v251 = v250 >= 0;
+    prompt(v252 {pure local}) {
+      throw(null).to(252); };
+    const v253 = base/245 + value/51;
+    const v254 = <Left v253>;
+    fluid baseWaitTime := v253
+    publish(@?)
+      .timeout(Left v253, {
+        prompt(v255 {impure}) {
+          only("Alice") {
+            {
+               } };
+          only("Bob") {
+            {
+               } };
+          publish(@?)
+            .case("Alice").send({
+              isClass = False,
+              msg = [],
+              pay = [0, ],
+              when = true})
+            .case("Bob").send({
+              isClass = False,
+              msg = [],
+              pay = [0, ],
+              when = true})
+            .recv({
+              didSend = v260,
+              from = v256,
+              msg = [],
+              secs = v259,
+              time = v258}){
+              v257 <- fluid balance(0)
+              fluid balance(0) := balance(0)/257
+              checkPay(0, Nothing);
+              fluid thisConsensusTime := thisConsensusTime/258
+              fluid thisConsensusSecs := thisConsensusSecs/259
+              fluid didPublish := didPublish/260
+              v261 <- fluid balance(0)
+              v262 <- fluid balance(0)
+              const v263 = balance(0)/261 <= balance(0)/262;
+              claim(CT_Assert)(v263, Just "balance sufficient for transfer");
+              v264 <- fluid balance(0)
+              const v265 = balance(0)/264 - balance(0)/261;
+              fluid balance(0) := v265
+              transfer.(balance(0)/261, Nothing).to(v49);
+              commit();
+              prompt(v266 {impure local}) {
+                only("Alice") {
+                  {
+                    const v268 = selfAddress("Alice", False, 267 )();
+                    prompt(v269 {impure local}) {
+                      protect<Null>("Alice".interact.informTimeout());
+                      throw(null).to(269); }; } };
+                only("Bob") {
+                  {
+                    const v271 = selfAddress("Bob", False, 270 )();
+                    prompt(v272 {impure local}) {
+                      protect<Null>("Bob".interact.informTimeout());
+                      throw(null).to(272); }; } };
+                throw(null).to(266); };
+              v273 <- fluid balance(0)
+              const v274 = 0 == balance(0)/273;
+              claim(CT_Assert)(v274, Just "balance zero at application exit");
+              exit(); }
+            
+          throw(null).to(255); }; } )
+      .case("Bob").send({
+        isClass = False,
+        msg = [],
+        pay = [wager/50, ],
+        when = true})
+      .recv({
+        didSend = v65,
+        from = v60,
+        msg = [],
+        secs = v64,
+        time = v63}){
+        v61 <- fluid balance(0)
+        const v62 = balance(0)/61 + wager/50;
+        fluid balance(0) := v62
+        checkPay(wager/50, Nothing);
+        fluid thisConsensusTime := thisConsensusTime/63
+        fluid thisConsensusSecs := thisConsensusSecs/64
+        fluid didPublish := didPublish/65
+        loopvar {
+          v66 = 1};
+        invariant{
+          v68 <- fluid balance(0)
+          const v69 = 2 * wager/50;
+          const v70 = balance(0)/68 == v69;
+          const v72 = 0 <= x/66;
+          const v73 = x/66 < 3;
+          const v74 = (v72 ? v73 : false);
+          const v75 = (v70 ? v74 : false);
+          return v75; }
+        while{
+          const v77 = outcome/66 == 1;
+          return v77; }
+        {
+          commit();
+          only("Alice") {
+            {
+              const v79 = selfAddress("Alice", False, 78 )();
+              prompt(v80 {impure local}) {
+                const v81 = protect<UInt>("Alice".interact.getHand());
+                const v83 = protect<UInt>("Alice".interact.random());
+                const v84 = digest(salt/83, x/81 );
+                const v85 = [commitment/84, salt/83 ];
+                throw(null).to(80); }; } };
+          only("Alice") {
+            {
+               } };
+          v194 <- fluid baseWaitTime
+          v197 <- fluid baseWaitTime
+          const v198 = UInt.max - base/197;
+          const v199 = v198 - value/51;
+          const v200 = v199 >= 0;
+          prompt(v201 {pure local}) {
+            throw(null).to(201); };
+          const v202 = base/194 + value/51;
+          const v203 = <Left v202>;
+          fluid baseWaitTime := v202
+          publish(@?)
+            .timeout(Left v202, {
+              prompt(v204 {impure}) {
+                only("Alice") {
+                  {
+                     } };
+                only("Bob") {
+                  {
+                     } };
+                publish(@?)
+                  .case("Alice").send({
+                    isClass = False,
+                    msg = [],
+                    pay = [0, ],
+                    when = true})
+                  .case("Bob").send({
+                    isClass = False,
+                    msg = [],
+                    pay = [0, ],
+                    when = true})
+                  .recv({
+                    didSend = v212,
+                    from = v205,
+                    msg = [],
+                    secs = v211,
+                    time = v210}){
+                    v206 <- fluid balance(0)
+                    fluid balance(0) := balance(0)/206
+                    checkPay(0, Nothing);
+                    const v207 = v49 == v205;
+                    const v208 = v60 == v205;
+                    const v209 = (v207 ? true : v208);
+                    claim(CT_Require)(v209, Just "sender correct");
+                    fluid thisConsensusTime := thisConsensusTime/210
+                    fluid thisConsensusSecs := thisConsensusSecs/211
+                    fluid didPublish := didPublish/212
+                    v213 <- fluid balance(0)
+                    v214 <- fluid balance(0)
+                    const v215 = balance(0)/213 <= balance(0)/214;
+                    claim(CT_Assert)(v215, Just "balance sufficient for transfer");
+                    v216 <- fluid balance(0)
+                    const v217 = balance(0)/216 - balance(0)/213;
+                    fluid balance(0) := v217
+                    transfer.(balance(0)/213, Nothing).to(v60);
+                    commit();
+                    prompt(v218 {impure local}) {
+                      only("Alice") {
+                        {
+                          const v220 = selfAddress("Alice", False, 219 )();
+                          prompt(v221 {impure local}) {
+                            protect<Null>("Alice".interact.informTimeout());
+                            throw(null).to(221); }; } };
+                      only("Bob") {
+                        {
+                          const v223 = selfAddress("Bob", False, 222 )();
+                          prompt(v224 {impure local}) {
+                            protect<Null>("Bob".interact.informTimeout());
+                            throw(null).to(224); }; } };
+                      throw(null).to(218); };
+                    v225 <- fluid balance(0)
+                    const v226 = 0 == balance(0)/225;
+                    claim(CT_Assert)(v226, Just "balance zero at application exit");
+                    exit(); }
+                  
+                throw(null).to(204); };
+              unreachable; } )
+            .case("Alice").send({
+              isClass = False,
+              msg = [commitAlice/84],
+              pay = [0, ],
+              when = true})
+            .recv({
+              didSend = v92,
+              from = v86,
+              msg = [v87],
+              secs = v91,
+              time = v90}){
+              v88 <- fluid balance(0)
+              fluid balance(0) := balance(0)/88
+              checkPay(0, Nothing);
+              const v89 = v49 == v86;
+              claim(CT_Require)(v89, Just "sender correct");
+              fluid thisConsensusTime := thisConsensusTime/90
+              fluid thisConsensusSecs := thisConsensusSecs/91
+              fluid didPublish := didPublish/92
+              commit();
+              claim(CT_Unknowable "Bob" [DLA_Var _handAlice/81,DLA_Var _saltAlice/83])(false, Nothing);
+              only("Bob") {
+                {
+                  const v94 = selfAddress("Bob", False, 93 )();
+                  prompt(v95 {impure local}) {
+                    const v96 = protect<UInt>("Bob".interact.getHand());
+                    throw(null).to(95); }; } };
+              only("Bob") {
+                {
+                   } };
+              v159 <- fluid baseWaitTime
+              v162 <- fluid baseWaitTime
+              const v163 = UInt.max - base/162;
+              const v164 = v163 - value/51;
+              const v165 = v164 >= 0;
+              prompt(v166 {pure local}) {
+                throw(null).to(166); };
+              const v167 = base/159 + value/51;
+              const v168 = <Left v167>;
+              fluid baseWaitTime := v167
+              publish(@?)
+                .timeout(Left v167, {
+                  prompt(v169 {impure}) {
+                    only("Alice") {
+                      {
+                         } };
+                    only("Bob") {
+                      {
+                         } };
+                    publish(@?)
+                      .case("Alice").send({
+                        isClass = False,
+                        msg = [],
+                        pay = [0, ],
+                        when = true})
+                      .case("Bob").send({
+                        isClass = False,
+                        msg = [],
+                        pay = [0, ],
+                        when = true})
+                      .recv({
+                        didSend = v177,
+                        from = v170,
+                        msg = [],
+                        secs = v176,
+                        time = v175}){
+                        v171 <- fluid balance(0)
+                        fluid balance(0) := balance(0)/171
+                        checkPay(0, Nothing);
+                        const v172 = v49 == v170;
+                        const v173 = v60 == v170;
+                        const v174 = (v172 ? true : v173);
+                        claim(CT_Require)(v174, Just "sender correct");
+                        fluid thisConsensusTime := thisConsensusTime/175
+                        fluid thisConsensusSecs := thisConsensusSecs/176
+                        fluid didPublish := didPublish/177
+                        v178 <- fluid balance(0)
+                        v179 <- fluid balance(0)
+                        const v180 = balance(0)/178 <= balance(0)/179;
+                        claim(CT_Assert)(v180, Just "balance sufficient for transfer");
+                        v181 <- fluid balance(0)
+                        const v182 = balance(0)/181 - balance(0)/178;
+                        fluid balance(0) := v182
+                        transfer.(balance(0)/178, Nothing).to(v49);
+                        commit();
+                        prompt(v183 {impure local}) {
+                          only("Alice") {
+                            {
+                              const v185 = selfAddress("Alice", False, 184 )();
+                              prompt(v186 {impure local}) {
+                                protect<Null>("Alice".interact.informTimeout());
+                                throw(null).to(186); }; } };
+                          only("Bob") {
+                            {
+                              const v188 = selfAddress("Bob", False, 187 )();
+                              prompt(v189 {impure local}) {
+                                protect<Null>("Bob".interact.informTimeout());
+                                throw(null).to(189); }; } };
+                          throw(null).to(183); };
+                        v190 <- fluid balance(0)
+                        const v191 = 0 == balance(0)/190;
+                        claim(CT_Assert)(v191, Just "balance zero at application exit");
+                        exit(); }
+                      
+                    throw(null).to(169); };
+                  unreachable; } )
+                .case("Bob").send({
+                  isClass = False,
+                  msg = [handBob/96],
+                  pay = [0, ],
+                  when = true})
+                .recv({
+                  didSend = v103,
+                  from = v97,
+                  msg = [v98],
+                  secs = v102,
+                  time = v101}){
+                  v99 <- fluid balance(0)
+                  fluid balance(0) := balance(0)/99
+                  checkPay(0, Nothing);
+                  const v100 = v60 == v97;
+                  claim(CT_Require)(v100, Just "sender correct");
+                  fluid thisConsensusTime := thisConsensusTime/101
+                  fluid thisConsensusSecs := thisConsensusSecs/102
+                  fluid didPublish := didPublish/103
+                  commit();
+                  only("Alice") {
+                    {
+                      const v105 = selfAddress("Alice", False, 104 )();
+                      prompt(v106 {pure local}) {
+                        throw(null).to(106); }; } };
+                  only("Alice") {
+                    {
+                       } };
+                  v124 <- fluid baseWaitTime
+                  v127 <- fluid baseWaitTime
+                  const v128 = UInt.max - base/127;
+                  const v129 = v128 - value/51;
+                  const v130 = v129 >= 0;
+                  prompt(v131 {pure local}) {
+                    throw(null).to(131); };
+                  const v132 = base/124 + value/51;
+                  const v133 = <Left v132>;
+                  fluid baseWaitTime := v132
+                  publish(@?)
+                    .timeout(Left v132, {
+                      prompt(v134 {impure}) {
+                        only("Alice") {
+                          {
+                             } };
+                        only("Bob") {
+                          {
+                             } };
+                        publish(@?)
+                          .case("Alice").send({
+                            isClass = False,
+                            msg = [],
+                            pay = [0, ],
+                            when = true})
+                          .case("Bob").send({
+                            isClass = False,
+                            msg = [],
+                            pay = [0, ],
+                            when = true})
+                          .recv({
+                            didSend = v142,
+                            from = v135,
+                            msg = [],
+                            secs = v141,
+                            time = v140}){
+                            v136 <- fluid balance(0)
+                            fluid balance(0) := balance(0)/136
+                            checkPay(0, Nothing);
+                            const v137 = v49 == v135;
+                            const v138 = v60 == v135;
+                            const v139 = (v137 ? true : v138);
+                            claim(CT_Require)(v139, Just "sender correct");
+                            fluid thisConsensusTime := thisConsensusTime/140
+                            fluid thisConsensusSecs := thisConsensusSecs/141
+                            fluid didPublish := didPublish/142
+                            v143 <- fluid balance(0)
+                            v144 <- fluid balance(0)
+                            const v145 = balance(0)/143 <= balance(0)/144;
+                            claim(CT_Assert)(v145, Just "balance sufficient for transfer");
+                            v146 <- fluid balance(0)
+                            const v147 = balance(0)/146 - balance(0)/143;
+                            fluid balance(0) := v147
+                            transfer.(balance(0)/143, Nothing).to(v60);
+                            commit();
+                            prompt(v148 {impure local}) {
+                              only("Alice") {
+                                {
+                                  const v150 = selfAddress("Alice", False, 149 )();
+                                  prompt(v151 {impure local}) {
+                                    protect<Null>("Alice".interact.informTimeout());
+                                    throw(null).to(151); }; } };
+                              only("Bob") {
+                                {
+                                  const v153 = selfAddress("Bob", False, 152 )();
+                                  prompt(v154 {impure local}) {
+                                    protect<Null>("Bob".interact.informTimeout());
+                                    throw(null).to(154); }; } };
+                              throw(null).to(148); };
+                            v155 <- fluid balance(0)
+                            const v156 = 0 == balance(0)/155;
+                            claim(CT_Assert)(v156, Just "balance zero at application exit");
+                            exit(); }
+                          
+                        throw(null).to(134); };
+                      unreachable; } )
+                    .case("Alice").send({
+                      isClass = False,
+                      msg = [saltAlice/83, handAlice/81],
+                      pay = [0, ],
+                      when = true})
+                    .recv({
+                      didSend = v114,
+                      from = v107,
+                      msg = [v108, v109],
+                      secs = v113,
+                      time = v112}){
+                      v110 <- fluid balance(0)
+                      fluid balance(0) := balance(0)/110
+                      checkPay(0, Nothing);
+                      const v111 = v49 == v107;
+                      claim(CT_Require)(v111, Just "sender correct");
+                      fluid thisConsensusTime := thisConsensusTime/112
+                      fluid thisConsensusSecs := thisConsensusSecs/113
+                      fluid didPublish := didPublish/114
+                      const v116 = digest(salt/108, x/109 );
+                      const v117 = commitment/87 == v116;
+                      claim(CT_Require)(v117, Nothing);
+                      const v119 = 4 - handBob/98;
+                      const v120 = handAlice/109 + v119;
+                      const v121 = v120 % 3;
+                      {
+                        v66 = outcome/121}
+                      continue; }
+                     }
+                 }
+             }
+        const v227 = outcome/66 == 2;
+        const v228 = outcome/66 == 0;
+        const v229 = (v227 ? true : v228);
+        claim(CT_Assert)(v229, Nothing);
+        const v230 = 2 * wager/50;
+        const v231 = outcome/66 == 2;
+        const v232 = (v231 ? v49 : v60);
+        v233 <- fluid balance(0)
+        const v234 = v230 <= balance(0)/233;
+        claim(CT_Assert)(v234, Just "balance sufficient for transfer");
+        v235 <- fluid balance(0)
+        const v236 = balance(0)/235 - v230;
+        fluid balance(0) := v236
+        transfer.(v230, Nothing).to(v232);
+        commit();
+        only("Alice") {
+          {
+            const v238 = selfAddress("Alice", False, 237 )();
+            prompt(v239 {impure local}) {
+              protect<Null>("Alice".interact.seeOutcome(outcome/66 ));
+              throw(null).to(239); }; } };
+        only("Bob") {
+          {
+            const v241 = selfAddress("Bob", False, 240 )();
+            prompt(v242 {impure local}) {
+              protect<Null>("Bob".interact.seeOutcome(outcome/66 ));
+              throw(null).to(242); }; } }; }
+       }
+  
+v275 <- fluid balance(0)
+const v276 = 0 == balance(0)/275;
+claim(CT_Assert)(v276, Just "balance zero at application exit");
+exit();

@@ -17,13 +17,13 @@ export const main = Reach.App(() => {
     const Bob = Participant('Bob', {
         //Specify Bob's interact interface here
         ...Player,
-        // the acceptWager method only displays the wager doens't have any logic do refuse/accept
+        // the acceptWager method only displays the wager don't have any logic do refuse/accept
         acceptWager: Fun([UInt], Null),
     });
     init();
-    // the init funciton tells the compiler to deploy the reach program which allows
+    // the init function tells the compiler to deploy the reach program which allows
     // the program to start doing things
-    //write your program here
+    // write your program here
 
     // states that this block of code is something that only Alice performs.
     // that means that the variable handAlice is known only to Alice
@@ -37,7 +37,7 @@ export const main = Reach.App(() => {
       const handAlice = declassify(interact.getHand());
     });
 
-    //here Alice join the application by publishing the value to the consensus network,
+    // here Alice join the application by publishing the value to the consensus network,
     // so it can be used to evaluate the outcome of the game. 
     // Once this happens, the code is in a "consensus step" where all participants act together
     // alice share the wager and hand with Bob
